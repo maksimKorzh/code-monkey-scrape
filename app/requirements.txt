@@ -1,4 +1,4 @@
-requests==2.18.4
+requests==2.20.0
 flask_paginate==0.5.3
 Flask==1.1.1
 beautifulsoup4==4.8.1
