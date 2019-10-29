@@ -1,0 +1,119 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <div class="container">
+    <div class="row">
+      <!-- HTML response view -->
+      <div class="col-8">
+        <div class="form-group">
+          <textarea class="form-control mt-2" id="htmlResponse" rows="32">{{ content }}</textarea>
+        </div>
+      </div>
+      
+      <!-- Extract data view -->
+      <div class="col">
+        
+        <!-- Add tag card -->
+        <div class="card mt-2">
+          <div class="card-body">
+            
+            <!-- Filter tags -->
+            <div class="form-group">
+              
+              <!-- Tag name -->
+              <input type="text" class="form-control" id="tag" placeholder="Add tag name to filter content by...">              
+              
+              <!-- CSS class -->
+              <input type="text" class="form-control mt-2" id="css" placeholder="Add CSS Class to filter tag by...">
+
+              <!-- Attributes -->
+              <input type="text" class="form-control mt-2" id="attr" placeholder="Add attributes to filter tag by...">
+
+            </div>
+            
+            <!-- Add button -->
+            <button class="btn btn-warning mt-2 col-sm" onclick="add_tag()">Add</button>
+          </div>
+        </div>
+      
+        <form action="/results">
+          <!-- Hiden input to store current URL -->
+          <input type="text" value="{{request.args.get('url')}}" name="url" hidden>
+  
+          <!-- Tag table-->
+          <table class="table mt-3" id="tags">
+            <thead>
+              <tr>
+                <th scope="col">Tag Name</th>
+                <th scope="col">CSS Class</th>
+                <th scope="col">Attribute</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          
+          <!--  Search for tags -->
+          <div class="col"><button class="btn btn-success col-sm-10" type='submit'>Scrape</button></div>
+          
+        </form>
+
+      </div>
+    </div>
+  </div>
+  
+  <script type="text/javascript">
+    // row count holder
+    var row_count = -1;
+    
+    // add tag to scrape
+    function add_tag() {
+      tag = document.getElementById("tag");
+      css = document.getElementById("css");
+      attr = document.getElementById("attr");
+      table = document.getElementById("tags");
+
+      // Add values to cells
+      if (tag.value) {
+        var row = table.insertRow(1);
+        row.id = row_count++
+
+        var cell_tag = row.insertCell(0);
+        var cell_css = row.insertCell(1);
+        var cell_attr = row.insertCell(2);
+        var del = row.insertCell(3);
+
+        cell_tag.innerHTML = "<input class='form-control' type='text' " +
+                             "value='" + tag.value + "' name='tag'/>";
+
+        cell_css.innerHTML = "<input class='form-control' type='text' " +
+                             "value='" + css.value + "' name='css'/>";
+
+        cell_attr.innerHTML = "<input class='form-control' type='text' " +
+                             "value='" + attr.value + "' name='attr'/>"
+
+        del.innerHTML = "<button class='btn btn-danger' type='button' onclick='del_tag(this.parentElement.parentElement.id)'>x</button>"
+
+        
+        tag.value = '';
+        css.value = '';
+        attr.value = '';
+
+      }
+      else
+        alert('You need at least to specify the tag name!')
+    }
+    
+    // delete tag to scrape
+    function del_tag(row_id) {
+      var table = document.getElementById("tags");
+      var row = document.getElementById(row_id);
+      
+      table.deleteRow(row.rowIndex)
+    }
+    
+  </script>
+  
+  
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+  <div class="container">
+    <div class="row">
+      <!-- Download form -->
+      <div class="col">
+        <!-- Download button-->
+        <button class="btn btn-success col-sm mt-2" type='button' onclick="exportTableToCSV('results.csv')">Download</button>
+      </div>
+    
+      <!-- Results table-->
+      <table class="table mt-3" id="tags">
+        <thead>
+          <tr>
+            {% for header in results[0] %}
+              <th scope="col">{{ header }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in results %}
+            <tr>
+              {% for key, value in row.items() %}
+                <td>{{ value }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <script type="text/javascript">
+    function downloadCSV(csv, filename) {
+      var csvFile;
+      var downloadLink;
+
+      // CSV file
+      csvFile = new Blob([csv], {type: "text/csv"});
+
+      // Download link
+      downloadLink = document.createElement("a");
+
+      // File name
+      downloadLink.download = filename;
+
+      // Create a link to the file
+      downloadLink.href = window.URL.createObjectURL(csvFile);
+
+      // Hide download link
+      downloadLink.style.display = "none";
+
+      // Add the link to DOM
+      document.body.appendChild(downloadLink);
+
+      // Click download link
+      downloadLink.click();
+    }
+  
+    function exportTableToCSV(filename) {
+      var csv = [];
+      var rows = document.querySelectorAll("table tr");
+      
+      for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
+        
+        for (var j = 0; j < cols.length; j++) 
+          row.push(cols[j].innerText);
+        
+        csv.push(row.join(";"));        
+      }
+
+      // Download CSV file
+      downloadCSV(csv.join("\n"), filename);
+    }
+  </script>
+  
+  
+  
+  
+  
+  
+{% endblock %}
