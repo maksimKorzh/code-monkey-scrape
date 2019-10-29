@@ -11,7 +11,6 @@ from flask import render_template
 from flask import flash
 from flask import redirect
 from flask import url_for
-from flask_paginate import Pagination, get_page_args
 import requests
 from bs4 import BeautifulSoup
 import json
